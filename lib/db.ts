@@ -4,7 +4,12 @@ import { Booking, Contact, DEFAULT_CONTACT, DEFAULT_REGULAR_CLASSES, DEFAULT_ROO
 
 // Penyimpanan berupa satu file JSON (data/db.json, atau $DATA_DIR/db.json). Cocok untuk satu server/VPS/Docker.
 export type DB = { rooms: Room[]; bookings: (Booking & { code: string })[]; regularClasses: RegularClass[]; locked: string[]; contact: Contact };
-const FILE = path.join(process.env.DATA_DIR || path.join(process.cwd(), "data"), "db.json");
+const serverless = process.env.VERCEL === "1" || !!process.env.AWS_LAMBDA_FUNCTION_NAME;
+const configuredDir = process.env.DATA_DIR;
+const dataDir = serverless && configuredDir && !path.isAbsolute(configuredDir)
+  ? path.join("/tmp", "pattimura-data")
+  : configuredDir || (serverless ? path.join("/tmp", "pattimura-data") : path.join(process.cwd(), "data"));
+const FILE = path.join(dataDir, "db.json");
 let queue: Promise<unknown> = Promise.resolve();
 
 async function load(): Promise<DB> {

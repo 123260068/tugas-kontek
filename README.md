@@ -11,7 +11,7 @@ Status ruang kosong, jadwal harian, pemesanan (web/QR), dan panel petugas untuk 
 - Tanpa Docker: `npm run build && npm start` (set `STAFF_PASSWORD`, `AUTH_SECRET`; `COOKIE_SECURE=true` bila memakai HTTPS).
 - Docker: `docker build -t ruang . && docker run -d -p 3000:3000 -v ruang-data:/data -e STAFF_PASSWORD=... -e AUTH_SECRET=... ruang`
 
-Data tersimpan di `data/db.json` (atau `$DATA_DIR`), jadi harus berjalan di satu server dengan disk tetap (bukan Vercel/serverless). Cadangkan file tersebut secara berkala.
+Data tersimpan di `data/db.json` (atau `$DATA_DIR`). Pada Vercel/serverless, aplikasi otomatis memakai `/tmp/pattimura-data` agar pemesanan tetap bisa digunakan, tetapi penyimpanannya tidak permanen saat instance diganti. Untuk data produksi permanen, gunakan satu server/VPS/Docker dengan disk tetap dan cadangkan file tersebut secara berkala.
 
 ## Catatan
 - Mahasiswa mendapat kode pembatalan 4 digit saat memesan; petugas bisa membatalkan tanpa kode.
